@@ -212,7 +212,7 @@ main{max-width:1280px;margin:0 auto;padding:0 24px 80px}
 
 .tbl-scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:.83rem}
-thead{position:sticky;top:0;z-index:10}
+thead{position:sticky;top:0;z-index:10;background:#f9fafb}
 thead th{
   padding:9px 14px;text-align:left;
   font-size:.66rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
@@ -306,7 +306,7 @@ tfoot td.r{font-size:.88rem;color:var(--text)}
 .bill-ico svg{width:18px;height:18px;color:#92400e}
 .bill-vendor{font-weight:700;font-size:.9rem}
 .bill-period{font-size:.7rem;color:var(--text2);margin-top:1px}
-.bst{padding:3px 10px;border-radius:99px;font-size:.67rem;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.bst{padding:3px 10px;border-radius:99px;font-size:.67rem;font-weight:700;letter-spacing:.3px;text-transform:uppercase;white-space:nowrap;align-self:flex-start}
 .bst.pending{background:var(--amber-bg);color:var(--amber)}
 .bst.paid{background:var(--green-bg);color:var(--green)}
 .bst.overdue{background:var(--red-bg);color:var(--red)}
@@ -373,6 +373,93 @@ footer{
   font-size:.68rem;color:var(--text3);
   border-top:1px solid var(--border);
   margin-top:32px;
+}
+
+/* ════════════════════════════════════
+   MOBILE  ≤ 640px
+════════════════════════════════════ */
+@media(max-width:640px){
+  /* Header — hide subtitle, shrink pill */
+  .hdr{padding:0 16px;height:52px}
+  .hdr-sub{display:none}
+  .hdr-name{font-size:.82rem}
+  .hdr-pill{display:none}
+
+  /* Nav — tighter */
+  .nav{padding:0 4px}
+  .nav-btn{padding:11px 12px 10px;font-size:.78rem;gap:5px}
+  .nav-btn svg{display:none}
+
+  /* Main */
+  main{padding:0 12px 64px}
+
+  /* Hero — compact */
+  .hero{padding:20px 16px 24px;margin:0 -12px 20px;border-radius:0 0 16px 16px}
+  .hero-top{margin-bottom:18px}
+  .hero-title{font-size:1.1rem}
+  .hero-badge{display:none}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .hero-stat{padding:12px 14px}
+  .hero-stat-value{font-size:1.2rem}
+  .hero-stat-sub{display:none}
+
+  /* Surplus bar */
+  .surplus-bar{padding:14px 16px;margin-bottom:12px}
+
+  /* KPI strip — 2 columns */
+  .kpi-strip{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+  .kpi{padding:12px 14px 10px;gap:10px}
+  .kpi-icon{width:32px;height:32px;border-radius:8px}
+  .kpi-icon svg{width:14px;height:14px}
+  .kpi-value{font-size:1.1rem}
+  .kpi-sub{display:none}
+
+  /* Section headers */
+  .sec-hd{margin-top:20px;margin-bottom:10px}
+  .pg-hd{padding:16px 0 14px}
+  .pg-hd h1{font-size:1rem}
+  .pg-hd p{display:none}
+
+  /* Charts — full width, shorter */
+  .chart-grid{grid-template-columns:1fr;gap:10px}
+  .chart-box canvas{max-height:220px}
+
+  /* Tables — hide Share column and # on small screens */
+  .tbl-bar{padding:10px 12px;gap:6px}
+  .tbl-meta{display:none}
+  .srch{min-width:0}
+  table{font-size:.78rem}
+  thead th,tbody td,tfoot td{padding:9px 10px}
+  /* Hide # col */
+  thead th:first-child,tbody td:first-child,tfoot td:first-child{display:none}
+  /* Hide Share col */
+  thead th:last-child,tbody td:last-child,tfoot td:last-child{display:none}
+
+  /* Bills */
+  .bill-head{padding:12px 14px;flex-direction:column;align-items:flex-start;gap:8px}
+  .bill-grid{grid-template-columns:1fr 1fr}
+  .bill-cell{padding:10px 14px}
+  .bill-foot{padding:8px 14px;gap:10px}
+
+  /* Balance sheet */
+  .bs-pair{grid-template-columns:1fr}
+  .bs-card-head h3{font-size:.7rem}
+
+  /* Note box */
+  .note-box{padding:12px 14px}
+}
+
+/* ════════════════════════════════════
+   SMALL PHONES  ≤ 380px
+════════════════════════════════════ */
+@media(max-width:380px){
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .hero-stat-value{font-size:1rem}
+  .kpi-strip{grid-template-columns:1fr 1fr}
+  .kpi-value{font-size:1rem}
+  .nav-btn{padding:10px 10px 9px;font-size:.74rem}
+  /* On very small screens also hide category badge column */
+  thead th:nth-child(3),tbody td:nth-child(3),tfoot td:nth-child(3){display:none}
 }
 </style>
 </head>
