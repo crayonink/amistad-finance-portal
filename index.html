@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Amistad AoA — Finance Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#f1f5f9;
+  --card:#fff;
+  --navy:#0f172a;
+  --navy2:#1e293b;
+  --primary:#2563eb;
+  --primary-dim:#1d4ed8;
+  --primary-light:#eff6ff;
+  --green:#16a34a;
+  --green-bg:#f0fdf4;
+  --red:#dc2626;
+  --red-bg:#fef2f2;
+  --amber:#b45309;
+  --amber-bg:#fffbeb;
+  --purple:#7c3aed;
+  --sky:#0369a1;
+  --text:#0f172a;
+  --text2:#475569;
+  --text3:#94a3b8;
+  --border:#e2e8f0;
+  --border2:#f1f5f9;
+  --r:10px;
+  --r2:6px;
+  --sh:0 1px 2px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
+  --sh2:0 1px 2px rgba(0,0,0,.04);
+}
+
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* ── HEADER ── */
+.site-header{
+  background:var(--navy);
+  color:#fff;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 32px;
+  position:sticky;
+  top:0;
+  z-index:200;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.site-header .brand{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;color:#fff;letter-spacing:-.5px;
+  flex-shrink:0;
+}
+.brand-text .name{font-weight:700;font-size:.95rem;letter-spacing:-.2px}
+.brand-text .sub{font-size:.72rem;color:#94a3b8;margin-top:1px}
+.header-right{display:flex;align-items:center;gap:10px}
+.audit-chip{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;
+  padding:4px 10px;
+  font-size:.72rem;font-weight:600;color:#cbd5e1;
+  letter-spacing:.3px;text-transform:uppercase;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+
+/* ── NAV ── */
+.site-nav{
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;
+  display:flex;
+  gap:2px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.site-nav::-webkit-scrollbar{display:none}
+.nav-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:14px 16px 13px;
+  border:none;background:none;cursor:pointer;
+  font-family:inherit;font-size:.82rem;font-weight:500;
+  color:var(--text2);
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  transition:color .15s,border-color .15s;
+}
+.nav-btn svg{opacity:.6;transition:opacity .15s}
+.nav-btn.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.nav-btn.active svg{opacity:1}
+.nav-btn:hover:not(.active){color:var(--text)}
+
+/* ── PAGE ── */
+main{max-width:1240px;margin:0 auto;padding:28px 24px 80px}
+.tab-panel{display:none;animation:fadein .2s ease}
+.tab-panel.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ── PAGE HEADER ── */
+.page-hd{margin-bottom:22px}
+.page-hd h1{font-size:1.25rem;font-weight:700;letter-spacing:-.3px}
+.page-hd p{font-size:.82rem;color:var(--text2);margin-top:3px}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px}
+.kpi{
+  background:var(--card);border-radius:var(--r);
+  padding:18px 20px 16px;
+  box-shadow:var(--sh2);
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.kpi::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--accent-color,var(--primary));
+  border-radius:var(--r) var(--r) 0 0;
+}
+.kpi-icon{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:12px;
+  background:var(--icon-bg,var(--primary-light));
+}
+.kpi-icon svg{color:var(--accent-color,var(--primary))}
+.kpi-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:4px}
+.kpi-value{font-size:1.45rem;font-weight:800;letter-spacing:-.5px;color:var(--text);line-height:1}
+.kpi-sub{font-size:.7rem;color:var(--text3);margin-top:5px}
+
+/* ── SECTION ── */
+.section-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.section-hd h2{font-size:.88rem;font-weight:700;letter-spacing:-.1px}
+.section-hd .count{
+  font-size:.7rem;font-weight:600;
+  background:var(--primary-light);color:var(--primary);
+  padding:2px 8px;border-radius:20px;
+}
+
+/* ── CHARTS ── */
+.chart-row{display:grid;grid-template-columns:5fr 3fr;gap:16px;margin-bottom:24px}
+@media(max-width:800px){.chart-row{grid-template-columns:1fr}}
+.chart-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;box-shadow:var(--sh2);
+}
+.chart-card .ch{font-size:.82rem;font-weight:700;margin-bottom:16px;color:var(--text)}
+.chart-card .ch span{font-size:.7rem;font-weight:500;color:var(--text2);margin-left:6px}
+.chart-card canvas{max-height:260px}
+
+/* ── TABLE ── */
+.tbl-wrap{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--sh2);overflow:hidden;
+}
+.tbl-toolbar{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  background:#fafafa;
+}
+.search-box{
+  position:relative;flex:1;min-width:180px;
+}
+.search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.search-box input{
+  width:100%;padding:8px 10px 8px 32px;
+  border:1px solid var(--border);border-radius:var(--r2);
+  font-family:inherit;font-size:.82rem;background:#fff;
+  outline:none;color:var(--text);
+  transition:border-color .15s,box-shadow .15s;
+}
+.search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.search-box input::placeholder{color:var(--text3)}
+.filter-select{
+  padding:8px 12px;border:1px solid var(--border);border-radius:var(--r2);
+  font-family:inherit;font-size:.82rem;background:#fff;
+  color:var(--text);outline:none;cursor:pointer;
+  transition:border-color .15s;
+}
+.filter-select:focus{border-color:var(--primary)}
+.tbl-count{font-size:.75rem;color:var(--text2);margin-left:auto;white-space:nowrap}
+
+table{width:100%;border-collapse:collapse}
+thead th{
+  padding:10px 14px;text-align:left;
+  font-size:.7rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--text2);
+  background:#fafafa;border-bottom:1px solid var(--border);
+  cursor:pointer;user-select:none;white-space:nowrap;
+}
+thead th:hover{color:var(--text)}
+thead th.r{text-align:right}
+thead th .sort-icon{margin-left:4px;opacity:.4;font-style:normal;font-size:.8em}
+thead th.sorted .sort-icon{opacity:1;color:var(--primary)}
+
+tbody tr{border-bottom:1px solid var(--border2);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafafe}
+tbody td{padding:12px 14px;vertical-align:middle}
+td.r{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:.85rem}
+td.muted{color:var(--text3);font-size:.78rem}
+td.name-cell{font-weight:500}
+
+tfoot tr td{
+  padding:11px 14px;background:#fafafa;
+  border-top:2px solid var(--border);
+  font-weight:700;font-size:.85rem;
+}
+tfoot tr td.r{font-size:.9rem;color:var(--text)}
+
+.empty-state{
+  padding:56px 0;text-align:center;color:var(--text2);
+}
+.empty-state svg{margin-bottom:10px;opacity:.3}
+.empty-state p{font-size:.85rem}
+
+/* ── RANK ── */
+.rank{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--border);
+  font-size:.7rem;font-weight:700;color:var(--text2);
+}
+.rank.top1{background:#fef3c7;border-color:#fcd34d;color:#92400e}
+.rank.top2{background:#f1f5f9;border-color:#cbd5e1;color:#475569}
+.rank.top3{background:#fef9ee;border-color:#fdba74;color:#9a3412}
+
+/* ── BADGE ── */
+.badge{
+  display:inline-block;padding:2px 8px;border-radius:20px;
+  font-size:.68rem;font-weight:600;letter-spacing:.2px;
+}
+.badge.ops{background:#ede9fe;color:#6d28d9}
+.badge.util{background:#fef3c7;color:#92400e}
+.badge.admin{background:#e0f2fe;color:#0369a1}
+.badge.maint{background:#dcfce7;color:#15803d}
+.badge.event{background:#fce7f3;color:#9d174d}
+.badge.member{background:#dcfce7;color:#15803d}
+.badge.nonmember{background:#e0f2fe;color:#0369a1}
+
+/* ── MINI BAR ── */
+.mini-bar{display:flex;align-items:center;gap:8px;min-width:120px}
+.mini-bar .track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.mini-bar .fill{height:100%;border-radius:3px;background:var(--primary);transition:width .5s ease}
+.mini-bar .fill.green{background:var(--green)}
+.mini-bar .pct{font-size:.7rem;color:var(--text2);min-width:30px;text-align:right;font-weight:500}
+
+/* ── BILLS ── */
+.bills-list{display:flex;flex-direction:column;gap:16px}
+.bill-wrap{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--sh2);overflow:hidden;
+}
+.bill-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  background:#fafafa;
+}
+.bill-header-left{display:flex;align-items:center;gap:14px}
+.bill-icon{
+  width:40px;height:40px;border-radius:8px;
+  background:#fef3c7;display:flex;align-items:center;justify-content:center;
+}
+.bill-title{font-weight:700;font-size:.95rem}
+.bill-meta{font-size:.72rem;color:var(--text2);margin-top:2px}
+.bill-status{
+  padding:4px 12px;border-radius:20px;
+  font-size:.7rem;font-weight:700;letter-spacing:.3px;text-transform:uppercase;
+}
+.bill-status.pending{background:var(--amber-bg);color:var(--amber)}
+.bill-status.paid{background:var(--green-bg);color:var(--green)}
+.bill-status.overdue{background:var(--red-bg);color:var(--red)}
+.bill-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.bill-item{
+  padding:14px 20px;border-bottom:1px solid var(--border2);
+  border-right:1px solid var(--border2);
+}
+.bill-item:last-child,.bill-item:nth-child(3n){border-right:none}
+.bill-item .bk{font-size:.7rem;color:var(--text2);margin-bottom:3px;font-weight:500}
+.bill-item .bv{font-size:.9rem;font-weight:700;color:var(--text)}
+.bill-item .bv.accent{color:var(--primary);font-size:1.05rem}
+.bill-item .bv.red{color:var(--red)}
+.bill-footer{
+  padding:10px 20px;
+  font-size:.72rem;color:var(--text3);
+  display:flex;gap:20px;flex-wrap:wrap;
+}
+.bill-footer span b{color:var(--text2)}
+
+/* ── BALANCE SHEET ── */
+.bs-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:680px){.bs-wrap{grid-template-columns:1fr}}
+.bs-side{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh2);overflow:hidden}
+.bs-side-header{
+  padding:14px 18px;background:#fafafa;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.bs-side-header .indicator{width:10px;height:10px;border-radius:3px}
+.bs-side-header h3{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)}
+.bs-group{padding:4px 0}
+.bs-group-label{
+  padding:8px 18px 4px;
+  font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);
+}
+.bs-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 18px;font-size:.83rem;
+  border-bottom:1px solid var(--border2);
+}
+.bs-row:last-child{border-bottom:none}
+.bs-row .bs-label{color:var(--text2)}
+.bs-row .bs-amt{font-weight:600;font-variant-numeric:tabular-nums}
+.bs-total{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 18px;
+  background:#fafafa;border-top:2px solid var(--border);
+  font-weight:800;font-size:.9rem;
+}
+.bs-total .bs-amt{color:var(--primary)}
+
+/* ── AUDITOR NOTE ── */
+.auditor-note{
+  margin-top:20px;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px 20px;box-shadow:var(--sh2);
+  display:flex;align-items:flex-start;gap:14px;
+}
+.auditor-note svg{flex-shrink:0;margin-top:1px;color:var(--text3)}
+.auditor-note .note-text{font-size:.78rem;color:var(--text2);line-height:1.6}
+.auditor-note .note-text strong{color:var(--text);font-weight:600}
+
+/* ── FOOTER ── */
+.site-footer{
+  text-align:center;padding:24px;
+  font-size:.72rem;color:var(--text3);
+  border-top:1px solid var(--border);
+  margin-top:40px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <div class="brand-text">
+      <div class="name">Amistad Association of Apartment Owners</div>
+      <div class="sub">Chakpachuria, New Town, Action Area II · Kolkata 700157</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="audit-chip">Audited · FY 2024–25</div>
+    <div class="dot" title="Data current"></div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <button class="nav-btn active" onclick="showTab('dashboard',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </button>
+  <button class="nav-btn" onclick="showTab('expenses',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    Expenses
+  </button>
+  <button class="nav-btn" onclick="showTab('income',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    Income
+  </button>
+  <button class="nav-btn" onclick="showTab('bills',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    Bills
+  </button>
+  <button class="nav-btn" onclick="showTab('balancesheet',this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Balance Sheet
+  </button>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════ DASHBOARD ═══════════════════════════ -->
+<div id="tab-dashboard" class="tab-panel active">
+
+  <div class="page-hd">
+    <h1>Financial Overview</h1>
+    <p>Income &amp; Expenditure for the year ended 31 March 2025 · Audited by Mittal Nitesh &amp; Co., Chartered Accountants</p>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi" style="--accent-color:#16a34a;--icon-bg:#f0fdf4">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <div class="kpi-label">Total Income</div>
+      <div class="kpi-value">₹1,48.81 L</div>
+      <div class="kpi-sub">FY 2024–25 · Audited</div>
+    </div>
+    <div class="kpi" style="--accent-color:#dc2626;--icon-bg:#fef2f2">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="kpi-label">Total Expenses</div>
+      <div class="kpi-value">₹1,39.25 L</div>
+      <div class="kpi-sub">Across 23 heads</div>
+    </div>
+    <div class="kpi" style="--accent-color:#2563eb;--icon-bg:#eff6ff">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="kpi-label">Net Surplus</div>
+      <div class="kpi-value">₹9.57 L</div>
+      <div class="kpi-sub">Transferred to reserves</div>
+    </div>
+    <div class="kpi" style="--accent-color:#7c3aed;--icon-bg:#ede9fe">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      </div>
+      <div class="kpi-label">Sinking Fund</div>
+      <div class="kpi-value">₹75.73 L</div>
+      <div class="kpi-sub">Fixed deposit · SBI</div>
+    </div>
+    <div class="kpi" style="--accent-color:#0369a1;--icon-bg:#e0f2fe">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div class="kpi-label">Bank Balance</div>
+      <div class="kpi-value">₹13.40 L</div>
+      <div class="kpi-sub">As on 31 Mar 2025</div>
+    </div>
+    <div class="kpi" style="--accent-color:#b45309;--icon-bg:#fffbeb">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="kpi-label">Dues Receivable</div>
+      <div class="kpi-value">₹3.89 L</div>
+      <div class="kpi-sub">Pending from members</div>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-card">
+      <div class="ch">Expense Breakdown by Category <span>FY 2024–25</span></div>
+      <canvas id="chartBar"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="ch">Income Sources <span>by share</span></div>
+      <canvas id="chartDoughnut"></canvas>
+    </div>
+  </div>
+
+  <div class="section-hd">
+    <h2>Top Expense Heads</h2>
+    <span class="count">FY 2024–25</span>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:36px">#</th>
+          <th>Expense Head</th>
+          <th>Category</th>
+          <th class="r">Amount (₹)</th>
+          <th style="min-width:150px">Share of Total</th>
+        </tr>
+      </thead>
+      <tbody id="dashTbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════ EXPENSES ═══════════════════════════ -->
+<div id="tab-expenses" class="tab-panel">
+
+  <div class="page-hd">
+    <h1>Expenditure</h1>
+    <p>All expense heads for FY 2024–25 · Click a column header to sort</p>
+  </div>
+
+  <div class="tbl-wrap">
+    <div class="tbl-toolbar">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="expSearch" placeholder="Search expense head…" oninput="filterExpenses()"/>
+      </div>
+      <select class="filter-select" id="expType" onchange="filterExpenses()">
+        <option value="">All Categories</option>
+        <option value="Operations">Operations</option>
+        <option value="Utilities">Utilities</option>
+        <option value="Admin">Admin</option>
+        <option value="Maintenance">Maintenance</option>
+        <option value="Events">Events</option>
+      </select>
+      <span class="tbl-count" id="expCount"></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:36px">#</th>
+          <th onclick="sortExp('name')">Expense Head <i class="sort-icon" id="si-exp-name">↕</i></th>
+          <th onclick="sortExp('type')">Category <i class="sort-icon" id="si-exp-type">↕</i></th>
+          <th class="r" onclick="sortExp('amount')">Amount (₹) <i class="sort-icon" id="si-exp-amount">↕</i></th>
+          <th style="min-width:160px">Share</th>
+        </tr>
+      </thead>
+      <tbody id="expTbody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="font-size:.78rem;color:var(--text2)">Total</td>
+          <td class="r" id="expTotal"></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div id="expEmpty" class="empty-state" style="display:none">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <p>No expenses match your search.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════ INCOME ═══════════════════════════ -->
+<div id="tab-income" class="tab-panel">
+
+  <div class="page-hd">
+    <h1>Income</h1>
+    <p>All income heads for FY 2024–25 · Click a column header to sort</p>
+  </div>
+
+  <div class="tbl-wrap">
+    <div class="tbl-toolbar">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="incSearch" placeholder="Search income head…" oninput="filterIncome()"/>
+      </div>
+      <select class="filter-select" id="incType" onchange="filterIncome()">
+        <option value="">All Sources</option>
+        <option value="Member">Member</option>
+        <option value="Non-Member">Non-Member</option>
+      </select>
+      <span class="tbl-count" id="incCount"></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:36px">#</th>
+          <th onclick="sortInc('name')">Income Head <i class="sort-icon" id="si-inc-name">↕</i></th>
+          <th onclick="sortInc('type')">Source <i class="sort-icon" id="si-inc-type">↕</i></th>
+          <th class="r" onclick="sortInc('amount')">Amount (₹) <i class="sort-icon" id="si-inc-amount">↕</i></th>
+          <th style="min-width:160px">Share</th>
+        </tr>
+      </thead>
+      <tbody id="incTbody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="font-size:.78rem;color:var(--text2)">Total</td>
+          <td class="r" id="incTotal"></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div id="incEmpty" class="empty-state" style="display:none">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <p>No income entries match your search.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════ BILLS ═══════════════════════════ -->
+<div id="tab-bills" class="tab-panel">
+
+  <div class="page-hd">
+    <h1>Bills &amp; Invoices</h1>
+    <p>Utility and vendor bills — add new bills to the BILLS array in the source file</p>
+  </div>
+
+  <div class="bills-list" id="billsContainer"></div>
+
+</div>
+
+<!-- ═══════════════════════════ BALANCE SHEET ═══════════════════════════ -->
+<div id="tab-balancesheet" class="tab-panel">
+
+  <div class="page-hd">
+    <h1>Balance Sheet</h1>
+    <p>As on 31 March 2025 · Audited by Mittal Nitesh &amp; Co., Chartered Accountants (Firm Regn. 330146E)</p>
+  </div>
+
+  <div class="kpi-grid" style="margin-bottom:20px">
+    <div class="kpi" style="--accent-color:#2563eb;--icon-bg:#eff6ff">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="kpi-label">Total Assets</div>
+      <div class="kpi-value">₹99.68 L</div>
+      <div class="kpi-sub">Balanced sheet</div>
+    </div>
+    <div class="kpi" style="--accent-color:#7c3aed;--icon-bg:#ede9fe">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      </div>
+      <div class="kpi-label">Reserves &amp; Surplus</div>
+      <div class="kpi-value">₹13.97 L</div>
+      <div class="kpi-sub">Corpus + Net Surplus</div>
+    </div>
+    <div class="kpi" style="--accent-color:#16a34a;--icon-bg:#f0fdf4">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div class="kpi-label">Sinking Fund (FD)</div>
+      <div class="kpi-value">₹81.73 L</div>
+      <div class="kpi-sub">State Bank of India</div>
+    </div>
+    <div class="kpi" style="--accent-color:#dc2626;--icon-bg:#fef2f2">
+      <div class="kpi-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="kpi-label">Current Liabilities</div>
+      <div class="kpi-value">₹9.97 L</div>
+      <div class="kpi-sub">Payables &amp; TDS</div>
+    </div>
+  </div>
+
+  <div class="bs-wrap">
+    <div class="bs-side">
+      <div class="bs-side-header">
+        <div class="indicator" style="background:#dc2626"></div>
+        <h3>Liabilities</h3>
+      </div>
+      <div class="bs-group">
+        <div class="bs-group-label">Reserves &amp; Surplus</div>
+        <div class="bs-row"><span class="bs-label">Corpus Fund</span><span class="bs-amt">₹4,41,212</span></div>
+        <div class="bs-row"><span class="bs-label">Add: Net Surplus (FY25)</span><span class="bs-amt">₹9,56,661</span></div>
+      </div>
+      <div class="bs-group">
+        <div class="bs-group-label">Funds</div>
+        <div class="bs-row"><span class="bs-label">Sinking Fund</span><span class="bs-amt">₹75,73,131</span></div>
+      </div>
+      <div class="bs-group">
+        <div class="bs-group-label">Current Liabilities &amp; Provisions</div>
+        <div class="bs-row"><span class="bs-label">Sundry Creditors</span><span class="bs-amt">₹9,48,521</span></div>
+        <div class="bs-row"><span class="bs-label">Filing Fees Payable</span><span class="bs-amt">₹8,260</span></div>
+        <div class="bs-row"><span class="bs-label">Auditing Payables</span><span class="bs-amt">₹28,000</span></div>
+      </div>
+      <div class="bs-group">
+        <div class="bs-group-label">Taxes Payable</div>
+        <div class="bs-row"><span class="bs-label">TDS Payables</span><span class="bs-amt">₹11,925</span></div>
+      </div>
+      <div class="bs-total"><span>Total Liabilities</span><span class="bs-amt">₹99,67,710</span></div>
+    </div>
+
+    <div class="bs-side">
+      <div class="bs-side-header">
+        <div class="indicator" style="background:#16a34a"></div>
+        <h3>Assets</h3>
+      </div>
+      <div class="bs-group">
+        <div class="bs-group-label">Current Assets — Cash &amp; Bank</div>
+        <div class="bs-row"><span class="bs-label">Petty Cash</span><span class="bs-amt">₹6,876</span></div>
+        <div class="bs-row"><span class="bs-label">Bank Account</span><span class="bs-amt">₹13,33,117</span></div>
+      </div>
+      <div class="bs-group">
+        <div class="bs-group-label">Fixed Deposits</div>
+        <div class="bs-row"><span class="bs-label">State Bank of India</span><span class="bs-amt">₹81,73,131</span></div>
+      </div>
+      <div class="bs-group">
+        <div class="bs-group-label">Accounts Receivables</div>
+        <div class="bs-row"><span class="bs-label">Dues From Members</span><span class="bs-amt">₹3,88,728</span></div>
+        <div class="bs-row"><span class="bs-label">Interest Receivable</span><span class="bs-amt">₹43,366</span></div>
+        <div class="bs-row"><span class="bs-label">TDS Receivable</span><span class="bs-amt">₹22,492</span></div>
+      </div>
+      <div class="bs-total"><span>Total Assets</span><span class="bs-amt">₹99,67,710</span></div>
+    </div>
+  </div>
+
+  <div class="auditor-note">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div class="note-text">
+      <strong>Auditor's Note:</strong> Audited by <strong>Mittal Nitesh &amp; Co., Chartered Accountants</strong> (Firm Regn. No. 330146E). CA Nitesh Mittal (M. No. 310864), Kolkata.
+      Accounts prepared under Historical Cost Convention on Going Concern basis in accordance with GAAP (India).
+      Opening balance differences of ₹16,601 written off in current year. Cash payments exceeding ₹10,000 noted for puja expenses.
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer class="site-footer">
+  Amistad Association of Apartment Owners · Finance Portal · Data sourced from audited accounts FY 2024–25
+</footer>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+//  DATA  — add new entries here
+// ══════════════════════════════════════════════════════════════════
+const EXPENSES = [
+  { name:"Facility Management Services",   type:"Operations",  amount:5537784.84 },
+  { name:"Electricity Expenses (WBSEDCL)", type:"Utilities",   amount:2235351.12 },
+  { name:"General Expenses",               type:"Admin",       amount:1636709.08 },
+  { name:"Cleaning Expenses",              type:"Operations",  amount:1455499.16 },
+  { name:"Expenses For Celebration",       type:"Events",      amount:983582.00  },
+  { name:"Security Service Expenses",      type:"Operations",  amount:661422.44  },
+  { name:"Pest Management Services",       type:"Operations",  amount:618719.22  },
+  { name:"Repair & Maintenance",           type:"Maintenance", amount:369683.99  },
+  { name:"Material Purchase",              type:"Maintenance", amount:184517.04  },
+  { name:"Accounting Charges",             type:"Admin",       amount:65900.00   },
+  { name:"Nobroker Software License",      type:"Admin",       amount:45560.00   },
+  { name:"Lift License",                   type:"Admin",       amount:45400.00   },
+  { name:"Filing Fees",                    type:"Admin",       amount:25000.00   },
+  { name:"Printing & Stationery",          type:"Admin",       amount:14078.00   },
+  { name:"Audit Fees",                     type:"Admin",       amount:11800.00   },
+  { name:"Fuel Charges",                   type:"Utilities",   amount:9982.00    },
+  { name:"Electronics Expenses",           type:"Maintenance", amount:8777.00    },
+  { name:"TDS Filing Charges",             type:"Admin",       amount:6000.00    },
+  { name:"Staff Welfare Expenses",         type:"Operations",  amount:4704.00    },
+  { name:"Internet Expenses",              type:"Utilities",   amount:2891.00    },
+  { name:"Interest For Late Payment",      type:"Admin",       amount:802.00     },
+  { name:"Bank Charges",                   type:"Admin",       amount:649.00     },
+  { name:"Travelling & Convenience",       type:"Admin",       amount:200.00     },
+];
+
+const INCOME = [
+  { name:"Maintenance Charges",                      type:"Member",     amount:13126439.00 },
+  { name:"Subscriptions & Donation for Celebration", type:"Non-Member", amount:1028968.66  },
+  { name:"Interest on FD",                           type:"Non-Member", amount:223870.00   },
+  { name:"Community Hall Booking",                   type:"Member",     amount:252851.00   },
+  { name:"Tenancy Agreement Charges",                type:"Member",     amount:114004.00   },
+  { name:"Penalty Fee",                              type:"Member",     amount:81726.00    },
+  { name:"Terrace Charges",                          type:"Member",     amount:38220.00    },
+  { name:"Delay Payment Charges",                    type:"Member",     amount:14837.00    },
+  { name:"Opening Balance Diff.",                    type:"Non-Member", amount:393.00      },
+  { name:"Discount Received",                        type:"Non-Member", amount:350.00      },
+  { name:"Round Off",                                type:"Non-Member", amount:14.50       },
+];
+
+// ── ADD MORE BILLS BELOW ──
+const BILLS = [
+  {
+    vendor:"WBSEDCL",
+    period:"January 2026",
+    consumerID:"900006483",
+    installationNo:"26608287",
+    invoiceNo:"4000036738017",
+    billDate:"02 Feb 2026",
+    dueDate:"11 Feb 2026",
+    status:"pending",
+    items:[
+      { label:"Units Consumed",         value:"6,938 kWh",      accent:false },
+      { label:"Energy Charge",          value:"₹47,664.06",     accent:false },
+      { label:"Demand Charge",          value:"₹10,744.00",     accent:false },
+      { label:"Electricity Duty",       value:"₹5,688.02",      accent:false },
+      { label:"Meter Rental",           value:"₹1,200.00",      accent:false },
+      { label:"Late Payment Surcharge", value:"₹921.98",        accent:false },
+      { label:"Timely Payment Rebate",  value:"−₹574.55",       accent:false },
+      { label:"Payable by Due Date",    value:"₹65,855.42",     accent:true  },
+      { label:"Amount After Due Date",  value:"₹1,31,121.00",   accent:"red" },
+    ]
+  },
+  // ── paste next bill object here ──
+];
+
+// ══════════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════════
+const INR = n => "₹" + n.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+const INRshort = n => {
+  if(n >= 1e7) return "₹"+(n/1e7).toFixed(2)+" Cr";
+  if(n >= 1e5) return "₹"+(n/1e5).toFixed(2)+" L";
+  return INR(n);
+};
+
+const BADGE = {
+  Operations:"ops", Utilities:"util", Admin:"admin",
+  Maintenance:"maint", Events:"event",
+  Member:"member", "Non-Member":"nonmember"
+};
+
+const totalExp = EXPENSES.reduce((s,e)=>s+e.amount,0);
+const totalInc = INCOME.reduce((s,e)=>s+e.amount,0);
+
+// ══════════════════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════════════════
+function showTab(id, btn){
+  document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("tab-"+id).classList.add("active");
+  btn.classList.add("active");
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  SORT STATE
+// ══════════════════════════════════════════════════════════════════
+const expSort = {col:"amount",dir:-1};
+const incSort = {col:"amount",dir:-1};
+
+function sortedData(arr, state){
+  return [...arr].sort((a,b)=>{
+    const av = a[state.col], bv = b[state.col];
+    if(typeof av === "number") return (av - bv)*state.dir;
+    return av.localeCompare(bv)*state.dir;
+  });
+}
+
+function updateSortIcons(prefix, col, dir){
+  ["name","type","amount"].forEach(c=>{
+    const el = document.getElementById("si-"+prefix+"-"+c);
+    if(!el) return;
+    el.textContent = c===col ? (dir===1?"↑":"↓") : "↕";
+    el.parentElement.classList.toggle("sorted", c===col);
+  });
+}
+
+function sortExp(col){
+  expSort.dir = expSort.col===col ? -expSort.dir : -1;
+  expSort.col = col;
+  updateSortIcons("exp",col,expSort.dir);
+  filterExpenses();
+}
+function sortInc(col){
+  incSort.dir = incSort.col===col ? -incSort.dir : -1;
+  incSort.col = col;
+  updateSortIcons("inc",col,incSort.dir);
+  filterIncome();
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RENDER EXPENSES
+// ══════════════════════════════════════════════════════════════════
+function rankClass(i){ return i===0?"rank top1":i===1?"rank top2":i===2?"rank top3":"rank"; }
+
+function renderExpenses(data){
+  const tbody = document.getElementById("expTbody");
+  const empty = document.getElementById("expEmpty");
+  const total = data.reduce((s,e)=>s+e.amount,0);
+  document.getElementById("expCount").textContent = data.length+" of "+EXPENSES.length+" entries";
+  document.getElementById("expTotal").textContent = INR(total);
+  if(!data.length){ tbody.innerHTML=""; empty.style.display="block"; return; }
+  empty.style.display="none";
+  tbody.innerHTML = data.map((e,i)=>{
+    const pct = (e.amount/totalExp*100).toFixed(1);
+    return `<tr>
+      <td><span class="${rankClass(i)}">${i+1}</span></td>
+      <td class="name-cell">${e.name}</td>
+      <td><span class="badge ${BADGE[e.type]}">${e.type}</span></td>
+      <td class="r">${INR(e.amount)}</td>
+      <td><div class="mini-bar"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span class="pct">${pct}%</span></div></td>
+    </tr>`;
+  }).join("");
+}
+
+function filterExpenses(){
+  const q = document.getElementById("expSearch").value.toLowerCase();
+  const t = document.getElementById("expType").value;
+  const filtered = sortedData(EXPENSES, expSort).filter(e=>
+    (!q||e.name.toLowerCase().includes(q))&&(!t||e.type===t)
+  );
+  renderExpenses(filtered);
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RENDER INCOME
+// ══════════════════════════════════════════════════════════════════
+function renderIncome(data){
+  const tbody = document.getElementById("incTbody");
+  const empty = document.getElementById("incEmpty");
+  const total = data.reduce((s,e)=>s+e.amount,0);
+  document.getElementById("incCount").textContent = data.length+" of "+INCOME.length+" entries";
+  document.getElementById("incTotal").textContent = INR(total);
+  if(!data.length){ tbody.innerHTML=""; empty.style.display="block"; return; }
+  empty.style.display="none";
+  tbody.innerHTML = data.map((e,i)=>{
+    const pct = (e.amount/totalInc*100).toFixed(1);
+    return `<tr>
+      <td><span class="${rankClass(i)}">${i+1}</span></td>
+      <td class="name-cell">${e.name}</td>
+      <td><span class="badge ${BADGE[e.type]}">${e.type}</span></td>
+      <td class="r">${INR(e.amount)}</td>
+      <td><div class="mini-bar"><div class="track"><div class="fill green" style="width:${pct}%"></div></div><span class="pct">${pct}%</span></div></td>
+    </tr>`;
+  }).join("");
+}
+
+function filterIncome(){
+  const q = document.getElementById("incSearch").value.toLowerCase();
+  const t = document.getElementById("incType").value;
+  const filtered = sortedData(INCOME, incSort).filter(e=>
+    (!q||e.name.toLowerCase().includes(q))&&(!t||e.type===t)
+  );
+  renderIncome(filtered);
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RENDER BILLS
+// ══════════════════════════════════════════════════════════════════
+function renderBills(){
+  const STATUS_LABEL = {pending:"Pending",paid:"Paid",overdue:"Overdue"};
+  document.getElementById("billsContainer").innerHTML = BILLS.map(b=>`
+    <div class="bill-wrap">
+      <div class="bill-header">
+        <div class="bill-header-left">
+          <div class="bill-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+          </div>
+          <div>
+            <div class="bill-title">${b.vendor} Electricity Bill</div>
+            <div class="bill-meta">${b.period} · Consumer ID: ${b.consumerID} · Installation: ${b.installationNo}</div>
+          </div>
+        </div>
+        <span class="bill-status ${b.status}">${STATUS_LABEL[b.status]}</span>
+      </div>
+      <div class="bill-body">
+        ${b.items.map(item=>`
+          <div class="bill-item">
+            <div class="bk">${item.label}</div>
+            <div class="bv${item.accent===true?" accent":item.accent==="red"?" red":""}">${item.value}</div>
+          </div>
+        `).join("")}
+      </div>
+      <div class="bill-footer">
+        <span>Invoice No: <b>${b.invoiceNo}</b></span>
+        <span>Bill Date: <b>${b.billDate}</b></span>
+        <span>Due Date: <b>${b.dueDate}</b></span>
+      </div>
+    </div>
+  `).join("");
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  DASHBOARD TABLE
+// ══════════════════════════════════════════════════════════════════
+function renderDashTop(){
+  const sorted = [...EXPENSES].sort((a,b)=>b.amount-a.amount).slice(0,8);
+  document.getElementById("dashTbody").innerHTML = sorted.map((e,i)=>{
+    const pct = (e.amount/totalExp*100).toFixed(1);
+    return `<tr>
+      <td><span class="${rankClass(i)}">${i+1}</span></td>
+      <td class="name-cell">${e.name}</td>
+      <td><span class="badge ${BADGE[e.type]}">${e.type}</span></td>
+      <td class="r">${INR(e.amount)}</td>
+      <td><div class="mini-bar"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span class="pct">${pct}%</span></div></td>
+    </tr>`;
+  }).join("");
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  CHARTS
+// ══════════════════════════════════════════════════════════════════
+function buildCharts(){
+  // Group expenses by type
+  const byType = {};
+  EXPENSES.forEach(e=>{ byType[e.type]=(byType[e.type]||0)+e.amount; });
+  const typeColors = {
+    Operations:"#3b82f6", Utilities:"#f59e0b",
+    Admin:"#0ea5e9", Maintenance:"#10b981", Events:"#ec4899"
+  };
+  const typeLabels = Object.keys(byType);
+  const typeVals   = typeLabels.map(k=>byType[k]);
+  const typeColArr = typeLabels.map(k=>typeColors[k]||"#94a3b8");
+
+  // Bar chart — expense by category
+  new Chart(document.getElementById("chartBar"),{
+    type:"bar",
+    data:{
+      labels: typeLabels,
+      datasets:[{
+        data: typeVals,
+        backgroundColor: typeColArr,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>" "+INRshort(ctx.raw)+" ("+((ctx.raw/totalExp)*100).toFixed(1)+"%)"}}
+      },
+      scales:{
+        y:{
+          ticks:{callback:v=>"₹"+(v/1e5).toFixed(0)+"L", font:{size:11}},
+          grid:{color:"#f1f5f9"}
+        },
+        x:{grid:{display:false}, ticks:{font:{size:11}}}
+      }
+    }
+  });
+
+  // Doughnut — income sources (Member vs Non-Member)
+  const memberTotal    = INCOME.filter(e=>e.type==="Member").reduce((s,e)=>s+e.amount,0);
+  const nonMemberTotal = INCOME.filter(e=>e.type==="Non-Member").reduce((s,e)=>s+e.amount,0);
+  new Chart(document.getElementById("chartDoughnut"),{
+    type:"doughnut",
+    data:{
+      labels:["Member Income","Non-Member Income"],
+      datasets:[{
+        data:[memberTotal, nonMemberTotal],
+        backgroundColor:["#10b981","#3b82f6"],
+        borderWidth:2,
+        borderColor:"#fff",
+        hoverOffset:8,
+      }]
+    },
+    options:{
+      responsive:true,
+      cutout:"68%",
+      plugins:{
+        legend:{position:"bottom",labels:{font:{size:11},padding:14,boxWidth:12,usePointStyle:true}},
+        tooltip:{callbacks:{label:ctx=>" "+INRshort(ctx.raw)+" ("+((ctx.raw/totalInc)*100).toFixed(1)+"%)"}}
+      }
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════════
+updateSortIcons("exp","amount",-1);
+updateSortIcons("inc","amount",-1);
+renderExpenses(sortedData(EXPENSES,expSort));
+renderIncome(sortedData(INCOME,incSort));
+renderBills();
+renderDashTop();
+buildCharts();
+</script>
+</body>
+</html>
